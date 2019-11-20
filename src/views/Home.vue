@@ -1,9 +1,9 @@
 <template>
   <div id="home">
     <el-container>
-      <el-container>
-        <router-view></router-view>
-      </el-container>
+      <router-view></router-view>
+    </el-container>
+    <el-container>
       <router-link to="/home/blink">
         <el-button type="primary">Blink</el-button>
       </router-link>
