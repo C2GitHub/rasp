@@ -7,16 +7,15 @@ var router = express.Router()
 var p16state = 0
 var p16sos = 0
 rpio.open(15, rpio.INPUT, rpio.PULL_DOWN);
-rpio.open(16, rpio.OUTPUT, rpio.HIGH);
-
 
 function pollCallback(ckpin) {
     var state = rpio.read(ckpin)
     p16sos = 1
+    rpio.write(16, rpio.LOW);
     console.log(`${ckpin} state is ${state}`)
 }
 
-rpio.poll(15, pollCallback)
+// rpio.poll(15, pollCallback)
 
 
 // define the home page route
@@ -26,19 +25,14 @@ router.get('/', function (req, res) {
 // define the about route
 router.get('/runblink', function (req, res) {
     // 定义pin口状态
-    while (1) {
-        if (!p16sos) {
+    rpio.open(16, rpio.OUTPUT, rpio.HIGH);
             /* On for 1 second */
             rpio.write(16, rpio.HIGH);
-            rpio.sleep(1);
+            // rpio.sleep(1);
 
             /* Off for half a second (500ms) */
-            rpio.write(16, rpio.LOW);
-            rpio.msleep(1000);
-        } else {
-            return
-        }
-    }
+            // rpio.write(16, rpio.LOW);
+            // rpio.msleep(1000);
     res.json({
         err: 0,
         state: 1,
@@ -48,7 +42,7 @@ router.get('/runblink', function (req, res) {
 
 router.get('/stopblink', (req, res) => {
     p16state = 0
-    rpio.close(16, rpio.PIN_RESET)
+    rpio.write(16, rpio.LOW);
     res.json({
         err: 0,
         state: 0,
@@ -59,12 +53,14 @@ router.get('/stopblink', (req, res) => {
 router.get('/resetblink', (req, res) => {
     p16sos = 0
     if (!p16sos) {
+        rpio.write(16, rpio.HIGH);
         res.json({
             err: 0,
             state: 1,
             msg: 'running'
         })
     } else {
+        rpio.write(16, rpio.LOW);
         res.json({
             err: 0,
             state: 0,
