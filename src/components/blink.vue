@@ -1,10 +1,5 @@
 <template>
   <div id="blink">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>树莓派控制系统</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-      </div>
       <div :style="{width:'100%'}">
         <el-button type="danger" @click="runBlink">运行</el-button>
         <el-button type="primary" @click="stopBlink">停止</el-button>
@@ -18,7 +13,6 @@
         <h3>测试输出口pin16(高电平输出)</h3>
         <h3>外部急停pin15(下降沿触发)</h3>
       </div>
-    </el-card>
   </div>
 </template>
 

@@ -5,6 +5,9 @@ import store from './store'
 import './plugins/element.js'
 import axios from 'axios'
 
+// flexible plugin
+import './assets/js/flexible.js'
+
 Vue.config.productionTip = false
 import {
   Pagination,
