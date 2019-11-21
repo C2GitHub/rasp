@@ -27,7 +27,7 @@ router.get('/runblink', function (req, res) {
     // 定义pin口状态
     rpio.open(16, rpio.OUTPUT, rpio.HIGH);
             /* On for 1 second */
-            rpio.write(16, rpio.HIGH);
+            rpio.write(16, rpio.HIGH)
             // rpio.sleep(1);
 
             /* Off for half a second (500ms) */

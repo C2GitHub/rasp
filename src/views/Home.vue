@@ -13,6 +13,9 @@
       <router-link to="/home/pwm">
         <el-button type="primary">PWM</el-button>
       </router-link>
+      <router-link to="/home/saoma">
+        <el-button type="primary">扫码枪测试</el-button>
+      </router-link>
     </el-container>
   </div>
 </template>

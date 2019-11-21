@@ -6,7 +6,7 @@
         <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
       </div>
       <div :style="{width:'100%'}">
-        <el-button type="primary" @click="runBlink">运行</el-button>
+        <el-button type="danger" @click="runBlink">运行</el-button>
         <el-button type="primary" @click="stopBlink">停止</el-button>
         <el-button type="success" @click="resetBlink">复位</el-button>
       </div>

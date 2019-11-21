@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import blink from '../components/blink.vue'
-
+import saoma from '../components/saoma.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -15,7 +15,8 @@ const routes = [
     name: 'home',
     component: Home,
     children: [
-      {path: 'blink', component: blink}
+      {path: 'blink', component: blink},
+      {path: 'saoma', component: saoma}
     ]
   },
   {
