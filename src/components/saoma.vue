@@ -1,14 +1,14 @@
 <template>
-  <div id="blink">
+  <div id="saoma">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>树莓派控制系统</span>
         <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
       </div>
       <div :style="{width:'100%'}">
-        <el-button type="primary">测试</el-button>
+        <el-button type="primary">扫码测试</el-button>
         <div class="input">
-          <el-input placeholder="请输入内容" v-model="input" clearable autofocus="true"></el-input>
+          <el-input placeholder="请输入内容" v-model="input" ref="input" clearable autofocus="true"></el-input>
         </div>
       </div>
       <div class="runState">
@@ -48,16 +48,17 @@ export default {
         console.log(val, oldVal);
         this.input = "";
         this.oldInput.push(val)
+        this.toast(val)
       }else {
  
       }
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
-#blink {
+#saoma {
   overflow: hidden;
   text-align: left;
   width: 100%;
@@ -72,6 +73,9 @@ export default {
   .test {
     margin-top: 20px;
     text-align: left;
+  }
+  .el-input {
+    margin-top: 10px;
   }
 }
 </style>

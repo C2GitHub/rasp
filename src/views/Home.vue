@@ -3,7 +3,7 @@
     <el-container>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-   <el-menu :default-active="1" class="el-menu" mode="horizontal">
+   <el-menu default-active="1" class="el-menu" mode="horizontal">
         <el-menu-item index="1">
           <router-link to="/home/blink">
             Blink
@@ -49,13 +49,7 @@ export default {
 </script>
 
 <style lang="less">
-#home {
-  .el-container {
-    a {
-      
-    }
-  }
-}
+#home {}
 .el-header {
   background-color: #b3c0d1;
   color: #333;
