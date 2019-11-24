@@ -1,23 +1,32 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import blink from '../components/blink.vue'
-import saoma from '../components/saoma.vue'
+import PLine1 from '../views/PLine1.vue'
+import L1home from '../components/L1home.vue'
+
 Vue.use(VueRouter)
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch(err => err);
+};
 
 const routes = [
   {
     path: '/',
-    redirect: '/home/blink'
+    redirect: '/pline1/home'
   },
   {
-    path: '/home',
-    name: 'home',
-    component: Home,
+    path: '/pline1',
+    name: 'pline1',
+    component: PLine1,
     children: [
-      {path: 'blink', component: blink},
-      {path: 'saoma', component: saoma}
-    ]
+      {path: 'home', component: L1home, meta: {keepAlive: true}},
+      {path: 'operate', component: () => import('../components/L1operate.vue'), meta: {keepAlive: true}},
+      {path: 'current', component: () => import('../components/L1current.vue'), meta: {keepAlive: true}},
+      {path: 'history', component: () => import('../components/L1history.vue'), meta: {keepAlive: true}},
+    ],
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/about',
@@ -31,7 +40,17 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-  mode: 'history'
+  mode: 'hash',
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return {
+        x: 0,
+        y: 0
+      }
+    }
+  }
 })
 
 export default router

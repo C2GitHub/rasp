@@ -5,9 +5,20 @@ import store from './store'
 import './plugins/element.js'
 import axios from 'axios'
 
+import 'element-ui/lib/theme-chalk/display.css'
+
 // flexible plugin
 import './assets/js/flexible.js'
 
+// moment
+import moment from 'moment'
+Vue.use(moment)
+
+// 添加全局过滤器
+Vue.filter('dateFormat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+  return moment(dataStr).format(pattern)
+
+})
 Vue.config.productionTip = false
 import {
   Pagination,
