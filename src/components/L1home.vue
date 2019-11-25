@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <!-- 条码扫描入口 -->
     <el-container>
       <div class="input-wraper">
         <div class="input">
@@ -11,44 +12,33 @@
             @blur="onBlur"
           ></el-input>
         </div>
-        <div class="input inputNow">
-          <el-input
-            v-model="inputNow.left"
-            placeholder="条码扫描"
-            autofocus="true"
-            ref="input"
-            @blur="onBlur"
-          ></el-input>
+      </div>
+    </el-container>
+
+    <!-- 当前条码显示 -->
+    <div class="title"><p>当前扫描条码 :</p></div>
+    <el-container class="dataArea">
+      <div class="showData">
+        <el-form ref="form" label-width="80px">
+          <el-form-item label="左侧条码">
+            <el-input v-model="inputNow.left"></el-input>
+          </el-form-item>
+          <el-form-item label="右侧条码">
+            <el-input v-model="inputNow.right"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="state">
+        <div class="btn">
+          <el-button
+            :type="inputNow.state === 1 ? 'success' : 'danger'"
+            :icon="inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
+            circle
+          ></el-button>
         </div>
       </div>
     </el-container>
 
-    <el-container>
-      <div class="table">
-        <el-table :data="data10" border style="width: 100%">
-          <el-table-column prop="date" label="时间" sortable>
-            <template slot-scope="scope">{{
-              scope.row.date | dateFormat
-            }}</template>
-          </el-table-column>
-          <el-table-column prop="left" label="左侧条码" sortable>
-          </el-table-column>
-          <el-table-column prop="right" label="右侧条码" sortable>
-          </el-table-column>
-          <el-table-column prop="state" label="状态">
-            <template slot-scope="scope">
-              <el-button
-                :type="scope.row.state === 1 ? 'success' : 'danger'"
-                :icon="
-                  scope.row.state === 1 ? 'el-icon-check' : 'el-icon-close'
-                "
-                circle
-              ></el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-container>
     {{ input }}
   </div>
 </template>
@@ -61,34 +51,21 @@ export default {
   name: 'L1home',
   data() {
     return {
-      state: 0,
       input: '',
       inputNow: '',
       timer: null,
-      times: 0,
-      data10: []
+      times: 0
     }
   },
   methods: {
-    toast(msg) {
-      const h = this.$createElement
-
-      this.$notify({
-        title: msg,
-        message: h('i', { style: 'color: teal' })
-      })
-    },
     onBlur: e => {
       e.target.focus()
-    },
-    onChange: e => {
-      console.log(e)
     }
   },
   watch: {
     input(val, oldVal) {
-      if(this.timer) {
-        return;
+      if (this.timer) {
+        return
       }
       this.timer = setTimeout(() => {
         // 判断数据是否正确输入
@@ -98,16 +75,17 @@ export default {
           Util.sentNewDate(this.input).then(flag => {
             if (!flag) {
               // 数据传输失败
-              this.$notify({
-                titile: "上传数据",
+              this.$notify.error({
+                title: '错误',
                 message: '上传数据失败！',
                 position: 'bottom-right'
               })
             }
           })
-        } else if(this.input.length > 0) { //清空时误触发
+        } else if (this.input.length > 0) {
+          //清空时误触发
           // 数据长度不符合要求
-          console.log('扫码异常:' +  this.input)
+          console.log('扫码异常:' + this.input)
           if (this.times < 3) {
             this.input = ''
             Util.scanAgain()
@@ -123,8 +101,7 @@ export default {
         clearTimeout(this.timer)
         this.timer = null
         // 数据清零
-          this.input = ''
-          this.times = 0
+        this.input = ''
       }, 500)
     }
   },
@@ -136,27 +113,29 @@ export default {
         Util.getCurrentOne().then(res => {
           if (res.data !== '') {
             this.inputNow = res.data
-            this.data10.unshift(res.data)
-          }
-          if (this.data10.length > 10) {
-            this.data10.pop()
+            this.$notify({
+              title: '成功',
+              message: res.data.left,
+              type: 'success',
+              position: 'bottom-right'
+            })
           }
         })
       }, 3000) // 轮询间隔，正成工作500以下
     }, 1000)
   },
-  beforeRouteLeave (to, from, next) {
-   this.loading = true
-   console.log(to, from)
-   if (to.path.startsWith('/pline1')) {
-     from.meta.keepAlive = true
-     to.meta.keepAlive = true
-   } else {
-     from.meta.keepAlive = false
-    // this.$destroy()
-   }
-   next()
- }
+  beforeRouteLeave(to, from, next) {
+    this.loading = true
+    console.log(to, from)
+    if (to.path.startsWith('/pline1')) {
+      from.meta.keepAlive = true
+      to.meta.keepAlive = true
+    } else {
+      from.meta.keepAlive = false
+      // this.$destroy()
+    }
+    next()
+  }
 }
 </script>
 
@@ -164,22 +143,41 @@ export default {
 #home {
   width: 100%;
   .input-wraper {
-   position: relative;
     width: 100%;
+    // height: 0px;
+    overflow: hidden;
   }
   .input {
-   position: absolute;
-   left: 0;
-   top: 0;
     width: 100%;
     margin: 0 auto;
   }
-  .table {
-    width: 100%;
-    margin-top: 60px;
-  }
   .inputNow {
     z-index: 999;
+  }
+  .dataArea {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ebebeb;
+    border-radius: 4px;
+  }
+  .title {
+    width: 100%;
+  }
+  .showData {
+    display: inline-block;
+    width: 80%;
+  }
+  .state {
+    display: inline-block;
+    width: 20%;
+    .btn {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      .el-button {
+        padding: 18px;
+      }
+    }
   }
 }
 </style>

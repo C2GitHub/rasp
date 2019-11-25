@@ -1,19 +1,28 @@
 <template>
   <div id="mTab">
-    <el-menu :default-active="defaultActive" class="el-menu" mode="horizontal" @select="handleSelect">
+    <el-menu :default-active="defaultActive" class="el-menu" mode="horizontal" active-text-color="#409EFF" @select="handleSelect">
         <el-menu-item index="1">
           <router-link to="/pline1/home">
-            消毒柜1线
+          <div class="icon"><i class="el-icon-s-home"></i></div>
+            <div class="text">首页</div>
           </router-link>
         </el-menu-item>
         <el-menu-item index="2">
-          <router-link to="/pline1/home">
-            消毒柜2线
+          <router-link to="/pline1/operate">
+          <div class="icon"><i class="el-icon-setting"></i></div>
+            <div class="text">操作</div>
           </router-link>
         </el-menu-item>
         <el-menu-item index="3">
-          <router-link to="/pline1/saoma">
-            接口信息
+          <router-link to="/pline1/current">
+          <div class="icon"><i class="el-icon-s-order"></i></div>
+            <div class="text">记录</div>
+          </router-link>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <router-link to="/pline1/history">
+           <div class="icon"><i class="el-icon-s-release"></i></div>
+            <div class="text">异常</div>
           </router-link>
         </el-menu-item>
       </el-menu>
@@ -46,8 +55,7 @@
 .el-menu {
   display: flex;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 60px;
   font-weight: 500;
   font-size: 0.14rem;
   color: #303133;
@@ -59,7 +67,6 @@
   height: 100%;
   line-height: 100%;
   padding: 0;
-  line-height: 60px;
   font-size: 14px;
   justify-content: space-between;
   text-align: center;
@@ -83,5 +90,19 @@
 }
 .el-card__header{
   padding: 10px;
+}
+#mTab{
+  .icon{
+    height: 20px;
+    line-height: 20px;
+    margin: 5px 0;
+    i{
+      margin: 0;
+    }
+  }
+  .text{
+    height: 14px;
+    line-height: 14px;
+  }
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
   <div id="main-warper">
     <el-container class="container">
-      <el-card class="box-card">
-        <div slot="header" class="hidden-sm-and-up">
+       <div slot="header" class="hidden-sm-and-up">
           <el-menu
             default-active="1"
             class="el-menu"
@@ -24,7 +23,6 @@
           </el-menu>
         </div>
         <router-view></router-view>
-      </el-card>
     </el-container>
   </div>
 </template>
@@ -97,35 +95,5 @@ export default {
   font-size: 14px;
   text-align: center;
   text-decoration: none;
-}
-.el-card {
-  width: 100%;
-  height: 100%;
-}
-#main-warper {
-  .el-card__header {
-    padding: 10px;
-    border-bottom: none;
-    color: #303133;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
-    .el-menu {
-      display: flex;
-      border: none;
-    }
-    .el-menu-item {
-      flex: 1;
-      text-align: center;
-      a {
-        display: block;
-        width: 100%;
-        height: 100%;
-        line-height: 50px;
-        font-size: 14px;
-        font-weight: 500;
-        padding: 0;
-        text-decoration: none;
-      }
-    }
-  }
 }
 </style>

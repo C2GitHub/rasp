@@ -20,6 +20,12 @@ var newItem = {
   time: Date.now()
 }
 
+// isRunning 停用 / 启用
+var isRunning = true
+
+// isPass直通  开启 / 关闭
+var isPass = false
+
 var top10 = []
 
 // 默认渲染首页
@@ -121,4 +127,48 @@ router.get('/api/sentPosErr', (req, res) => {
   })
 })
 
+
+router.get('/api/confirmPass', (req, res) => {
+  // 确认放行，输出pin，通知plc
+  res.json({
+    err: 0,
+    success: 1
+  })
+})
+
+
+// 功能启用或请用isRuning
+router.post('/api/setRunning', (req, res) => {
+  if (req.body.state == 1) {
+    isRunning = true
+    res.json({
+      err: 0,
+      state: 1
+    })
+  } else if(req.body.state == 0) {
+    isRunning = false
+    res.json({
+      err: 0,
+      state: 0
+    })
+  }
+})
+
+
+// 功能启用或停用直通模式isPass
+router.post('/api/setPass', (req, res) => {
+  if (req.body.state == 1) {
+    isPass = true
+    res.json({
+      err: 0,
+      state: 1
+    })
+  } else if(req.body.state == 0) {
+    isPass = false
+    res.json({
+      err: 0,
+      state: 0
+    })
+  }
+})
 module.exports = router

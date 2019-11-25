@@ -88,7 +88,7 @@ body {
   overflow: hidden;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -133,15 +133,17 @@ body {
 }
 .el-main {
   height: 100%;
-  padding: 0.1rem;
+  padding: 0.2rem;
 }
 .el-footer {
   padding: 0;
 }
-.el-card.is-always-shadow,
-.el-card.is-hover-shadow:focus,
-.el-card.is-hover-shadow:hover {
-  box-shadow: none;
+.source{
+  width: 100%;
+  padding: .2rem;
+  border: 1px solid #ebebeb;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 // 移动端
 @media screen and (max-width: 768px) {
@@ -157,21 +159,11 @@ body {
     bottom: 50px;
     padding-bottom: 0 !important;
   }
-  .el-card {
-    border: none;
-  }
 }
 // 适配pc端
 @media screen and (min-width: 768px) {
   .main {
     bottom: 0;
-  }
-  .el-main {
-    padding: 0;
-    padding-right: 0.2rem;
-  }
-  .el-card__header {
-    padding: 0 !important;
   }
 }
 </style>
