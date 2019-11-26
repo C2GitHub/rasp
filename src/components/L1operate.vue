@@ -5,11 +5,11 @@
         <p>功能选择</p>
         <div class="el-form-item">
           <label class="el-form-item__label" style="width: 80px;"
-            >功能启用</label
+            >自动模式</label
           >
           <div class="el-form-item__content" style="margin-left: 80px;">
             <el-switch
-              v-model="isRuning"
+              v-model="isAuto"
               active-text="启用"
               active-color="#13ce66"
               inactive-color="#ff4949"
@@ -39,7 +39,7 @@
 
     <el-container>
       <div class="source">
-        <p>远程复位</p>
+        <p>远程控制</p>
         <div class="el-form-item">
           <el-button type="primary" @click="confirm">异常确认 / 放行</el-button>
         </div>
@@ -55,37 +55,37 @@ import Util from '../plugins/util.js'
 export default {
   data() {
     return {
-      isRuning: true,
+      isAuto: true,
       isPass: false,
-      isRuningTimer: null,
+      isAutoTimer: null,
       isPassTimer: null
     }
   },
   watch: {
-    isRuning(val) {
-      if (this.isRuningTimer) return
+    isAuto(val) {
+      if (this.isAutoTimer) return
 
-      Util.setRunning(val ? 1 : 0).then(state => {
-        this.isRuningTimer = setTimeout(() => {
+      Util.setAuto(val ? 1 : 0).then(state => {
+        this.isAutoTimer = setTimeout(() => {
           if (state == 1) {
-          this.isRuning = true
-          this.$notify({
-          title: '成功',
-          message: '监视功能启用',
-          type: 'success',
+          this.isAuto = true
+          this.$notify.success({
+          title: '正确',
+          message: '自动运行中',
           position: 'bottom-right'
         })
         }else {
-          this.isRuning = false
-          this.$notify.error({
-          title: '错误',
-          message: '监视功能已关闭',
+          this.isAuto = false
+          this.$notify({
+          title: '警告',
+          message: '当前处于手动状态',
+          type: 'error',
           position: 'bottom-right'
         })
         }
 
-        clearTimeout(this.isRuningTimer)
-        this.isRuningTimer = null
+        clearTimeout(this.isAutoTimer)
+        this.isAutoTimer = null
         }, 200)
       })
     },

@@ -1,12 +1,10 @@
 <template>
   <div id="current">
-        <el-container>
+    <el-container>
       <div class="table">
-        <el-table :data="data10" border style="width: 100%">
-          <el-table-column prop="date" label="时间" sortable>
-            <template slot-scope="scope">{{
-              scope.row.date | dateFormat
-            }}</template>
+        <el-table :data="$store.state.allData" border style="width: 100%">
+          <el-table-column prop="date" label="时间" sortable  :formatter="dateFormat">
+            
           </el-table-column>
           <el-table-column prop="left" label="左侧条码" sortable>
           </el-table-column>
@@ -30,19 +28,35 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import moment from 'moment'
+
 export default {
   name: 'HelloWorld',
-  props: {
-    
+  props: {},
+  data() {
+    return {
+      scanData: []
+    }
+  },
+  mounted() {},
+  methods: {
+    dateFormat: function(row, column) {
+      var date = row.time
+      if (date == undefined) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    }
   }
 }
 </script>
 
 <style scoped lang="less" scoped>
-#current{
+#current {
   width: 100%;
 }
-  .table {
-    width: 100%;
-  }
+.table {
+  width: 100%;
+}
 </style>

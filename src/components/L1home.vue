@@ -10,6 +10,7 @@
             autofocus="true"
             ref="input"
             @blur="onBlur"
+            @focus="onFocus"
           ></el-input>
         </div>
       </div>
@@ -26,26 +27,24 @@
           <el-form-item label="右侧条码">
             <el-input v-model="inputNow.right"></el-input>
           </el-form-item>
+
+          <el-form-item label="数据状态">
+            <el-button
+              :type="inputNow.state === 1 ? 'success' : 'danger'"
+              :icon="inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
+              >{{ inputNow.state === 1 ? '正确' : '异常' }}
+            </el-button>
+          </el-form-item>
         </el-form>
       </div>
-      <div class="state">
-        <div class="btn">
-          <el-button
-            :type="inputNow.state === 1 ? 'success' : 'danger'"
-            :icon="inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
-            circle
-          ></el-button>
-        </div>
-      </div>
     </el-container>
-
-    {{ input }}
   </div>
 </template>
 
 <script>
 import Util from '../plugins/util.js'
 import BScroll from 'better-scroll'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'L1home',
@@ -58,9 +57,11 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['pushAllData']),
     onBlur: e => {
       e.target.focus()
-    }
+    },
+    onFocus: e => {}
   },
   watch: {
     input(val, oldVal) {
@@ -113,6 +114,8 @@ export default {
         Util.getCurrentOne().then(res => {
           if (res.data !== '') {
             this.inputNow = res.data
+            // 添加到全局store
+            this.$store.commit('pushAllData', res.data)
             this.$notify({
               title: '成功',
               message: res.data.left,
@@ -121,12 +124,11 @@ export default {
             })
           }
         })
-      }, 3000) // 轮询间隔，正成工作500以下
+      }, 500) // 轮询间隔，正成工作500以下
     }, 1000)
   },
   beforeRouteLeave(to, from, next) {
     this.loading = true
-    console.log(to, from)
     if (to.path.startsWith('/pline1')) {
       from.meta.keepAlive = true
       to.meta.keepAlive = true
@@ -155,8 +157,8 @@ export default {
     z-index: 999;
   }
   .dataArea {
-    margin: 20px 0;
     padding: 20px;
+    padding-left: 0;
     border: 1px solid #ebebeb;
     border-radius: 4px;
   }
@@ -164,8 +166,7 @@ export default {
     width: 100%;
   }
   .showData {
-    display: inline-block;
-    width: 80%;
+    width: 100%;
   }
   .state {
     display: inline-block;

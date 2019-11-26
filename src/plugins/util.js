@@ -58,10 +58,10 @@ export default {
   },
 
   /**
-   * 启用和关闭检测功能isRunning
+   * 启用和关闭检测功能isAuto
    */
-  setRunning(state) {
-    return axios.post('/api/setRunning', {state: state}).then(res => {
+  setAuto(state) {
+    return axios.post('/api/setAuto', {state: state}).then(res => {
       if (res.status === 200) {
         return res.data.state
       }
@@ -78,7 +78,31 @@ export default {
         return res.data.state
       }
     })
-  }
+  },
+
+/**
+ * 获取当前班次扫描数据
+ */
+
+ getScanData() {
+   return axios.get('/api/scanData').then(res => {
+     if(res.status === 200) {
+       return res.data
+     }
+   })
+ },
+
+/**
+ * 获取当前班次扫描数据
+ */
+
+getErrData() {
+  return axios.get('/api/getErrData').then(res => {
+    if(res.status === 200) {
+      return res.data
+    }
+  })
+}
 
 
 }
