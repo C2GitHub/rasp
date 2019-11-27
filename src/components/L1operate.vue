@@ -36,11 +36,21 @@
         </div>
 
         <div class="el-form-item">
-          <label class="el-form-item__label" style="width: 106px;"
+          <label class="el-form-item__label" style="width: 92px;"
             >状态延时(s)</label
           >
-          <div class="el-form-item__content" style="margin-left: 106px;">
-            <el-input-number v-model="delayDataClearTime" :precision="1" :step="0.1" :max="6" :min="2" @change="handleDelayTimeChange"></el-input-number>
+          <div class="el-form-item__content" style="margin-left: 96px;">
+            <el-input-number v-model="delayDataClearTime" :precision="1" :step="0.1" :min="2" :max="6" @change="handleDelayTimeChange"></el-input-number>
+          </div>
+        </div>
+
+
+        <div class="el-form-item">
+          <label class="el-form-item__label" style="width: 96px;"
+            >轮询间隔(ms)</label
+          >
+          <div class="el-form-item__content" style="margin-left: 96px;">
+            <el-input-number v-model="$store.state.pollIntervalTime" :precision="0" :step="100" :min="100" :max="3000" @change="handlePollTime"></el-input-number>
           </div>
         </div>
       </div>
@@ -52,8 +62,17 @@
         <div class="el-form-item">
           <el-button type="primary" @click="confirm">异常确认 / 放行</el-button>
         </div>
+      </div>
+    </el-container>
 
-        <div class="el-form-item"></div>
+    <el-container>
+      <div class="source">
+        <p>数据清除</p>
+        <div class="el-form-item">
+          <el-button type="danger" @click="emptyAllData">清空生产记录</el-button>
+          <el-button type="danger" @click="emptyErrData">清空异常历史</el-button>
+        </div>
+
       </div>
     </el-container>
   </div>
@@ -168,6 +187,40 @@ export default {
          })
        }
      })
+    },
+    // 设置轮询时间
+    handlePollTime() {
+    //   this.$store.commit('setPollTime')
+    },
+
+    // 清空生产记录
+    emptyAllData() {
+      Util.emptyAllData().then(res => {
+        if (res.isSucess === 1) {
+          this.$notify({
+           title: '成功',
+           message: '生产记录已清空',
+           type: 'success',
+           position: 'bottom-right'
+         })
+
+         this.$store.commit('emptyAllData')
+        }
+      })
+    },
+
+    // 清空异常历史
+    emptyErrData() {
+      Util.emptyErrData().then(res => {
+        if (res.isSucess === 1) {
+          this.$notify({
+           title: '成功',
+           message: '异常记录已清空',
+           type: 'success',
+           position: 'bottom-right'
+         })
+        }
+      })
     }
   },
   created() {

@@ -5,12 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    allData: [{
-      left: '1003000500023L221911210044',
-      right: '1003000500023L221911210044',
-      state: 1,
-      time: Date.now()
-    }]
+    allData: [],
+    errData:[],
+    pollIntervalTime: 500,
+    inputNow: {left: '', right: '', time: '', state: 0},
   },
   mutations: {
     pushAllData(state, data) {
@@ -18,6 +16,21 @@ export default new Vuex.Store({
     },
     setAllData(state, dataObj) {
       state.allData = dataObj
+    },
+// 设置轮询时间
+    setPollTime(state) {
+      state.pollIntervalTime += 100
+      if (state.pollIntervalTime <= 100) {
+        state.pollIntervalTime = 100
+      }else if(state.pollIntervalTime >= 3000) {
+        state.pollIntervalTime = 3000
+      }
+    },
+    emptyAllData(state) {
+      state.allData = []
+    },
+    replaceInputNow(state, data){
+      state.inputNow = data
     }
   },
   actions: {

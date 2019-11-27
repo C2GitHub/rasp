@@ -28,6 +28,7 @@
 import pcTab from '@/components/pcTab.vue'
 import mTab from '@/components/mTab.vue'
 import BScroll from 'better-scroll'
+import Util from './plugins/util.js'
 export default {
   name: 'app',
   components: {
@@ -36,10 +37,38 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-     setTimeout(() => {
+      setTimeout(() => {
         this._initBS()
-     }, 0)
+      }, 0)
     })
+
+    // 设置轮询获取最新数据
+    // 页面启动*s后还是执行轮询
+    setTimeout(() => {
+      setInterval(() => {
+        Util.getCurrentOne().then(res => {
+          if (res.data !== '') {
+            this.$store.commit('replaceInputNow', res.data)
+            console.log(
+              '服务器最新数据: 左:(' +
+                res.data.left +
+                ') | 右:(' +
+                res.data.right +
+                ')'
+            )
+            // 添加到全局store
+            this.$store.commit('pushAllData', res.data)
+
+            this.$notify({
+              title: res.data.left === res.data.right ? '成功' : '异常',
+              message: res.data.left,
+              type: res.data.left === res.data.right ? 'success' : 'error',
+              position: 'bottom-right'
+            })
+          }
+        })
+      }, this.$store.state.pollIntervalTime) // 轮询间隔，正成工作500以下
+    }, 1000)
   },
   methods: {
     _initBS() {
@@ -88,7 +117,8 @@ body {
   overflow: hidden;
 }
 #app {
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -138,9 +168,9 @@ body {
 .el-footer {
   padding: 0;
 }
-.source{
+.source {
   width: 100%;
-  padding: .2rem;
+  padding: 0.2rem;
   border: 1px solid #ebebeb;
   border-radius: 4px;
   margin-bottom: 10px;

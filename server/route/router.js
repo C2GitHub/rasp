@@ -40,6 +40,17 @@ Util.getData(path.join(__dirname, './data.text')).then( data => {
     throw error
   }
 })
+// 所有错误数据
+var errData = []
+Util.getData(path.join(__dirname, './err.text')).then( data => {
+  try {
+    data = data.trim() === '' ? '[]' : data
+    let dataObj = JSON.parse(data)
+    errData = dataObj
+  } catch (error) {
+    throw error
+  }
+})
 
 // 默认渲染首页
 // 服务器初始化，首页必须同步读取
@@ -66,13 +77,16 @@ router.get('/api/getCurrentOne', function(req, res) {
 })
 
 // 接收一个新扫描值
-var getTwoDataDuration = null
 var tempData = {
   time: '',
   left: '',
   right: '',
   state: ''
 }
+
+
+// 状态清空定时器delayTimer
+var delayTimer = null
 
 router.post('/api/sentNewDate', (req, res) => {
   // req.body.data 得到扫描数据
@@ -87,24 +101,20 @@ router.post('/api/sentNewDate', (req, res) => {
         tempData.state = 1
       } else {
         tempData.state = 0
-        // ----------保存错误数据------------//
-        Util.getData(path.join(__dirname, './err.text')).then(data => {
-          data = data === '' ? '[]' : data
-          data = JSON.parse(data)
-          Util.saveData( path.join( __dirname, './err.text'), JSON.stringify(data.push(tempData))
-              .then(isSucess => {
-                if (isSucess) {
-                  console.log('写入异常数据成功')
-                }
-              })
-          )
-        })
+        // 保存错误数据
+        errData.push(tempData)
+        Util.saveData(path.join(__dirname, './err.text'), JSON.stringify(errData)).then(
+          isSucess => {
+            if (isSucess) {
+              console.log('写入异常数据成功')
+            }
+          }
+        )
       }
       // 保存新数据
       newItem = { ...tempData }
       allData.push({ ...tempData })
 
-      console.log(newItem, allData)
       Util.saveData('./route/data.text', JSON.stringify(allData)).then(
         isSucess => {
           if (isSucess) {
@@ -131,17 +141,17 @@ router.post('/api/sentNewDate', (req, res) => {
   })
 
   // 延时数据清空
-  if (!!timer) return
-  timer = setTimeout(() => {
+  if (!!delayTimer) return
 
+  delayTimer = setTimeout(() => {
     // 清空数据
     tempData.left = ''
     tempData.right = ''
     tempData.time = ''
     tempData.state = ''
-    console.log('上一次扫描状态清空！')
-    clearTimeout(getTwoDataDuration)
-    getTwoDataDuration = null
+    console.log('上一次扫描状态已清空！')
+    clearTimeout(delayTimer)
+    delayTimer = null
   }, delayDataClearTime) // 规定时间内必须完成左右两侧数据扫描
 })
 
@@ -248,7 +258,6 @@ router.post('/api/setDelayTime', (req, res) => {
   })
 })
 
-
 // 获取延迟时间
 router.get('/api/getDelayTime', ( req, res) => {
   res.json({
@@ -257,5 +266,37 @@ router.get('/api/getDelayTime', ( req, res) => {
   })
 })
 
+// 清空所有生产数据
+router.get('/api/emptyAllData', (req, res) => {
+  allData = []
+  Util.saveData('./route/data.text', JSON.stringify(allData)).then(
+    isSucess => {
+      if (isSucess) {
+        console.log('清空数据成功')
+      }
+    }
+  )
+
+  res.json({
+    err:0,
+    isSucess: 1
+  })
+})
+
+// 清空异常数据
+router.get('/api/emptyErrData', (req, res) => {
+  errData = []
+  Util.saveData('./route/err.text', JSON.stringify(errData)).then(
+    isSucess => {
+      if (isSucess) {
+        console.log('清空异常数据成功')
+      }
+    }
+  )
+  res.json({
+    err:0,
+    isSucess: 1
+  })
+})
 
 module.exports = router

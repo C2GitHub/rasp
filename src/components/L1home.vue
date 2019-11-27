@@ -22,17 +22,17 @@
       <div class="showData">
         <el-form ref="form" label-width="80px">
           <el-form-item label="左侧条码">
-            <el-input v-model="inputNow.left"></el-input>
+            <el-input v-model="$store.state.inputNow.left"></el-input>
           </el-form-item>
           <el-form-item label="右侧条码">
-            <el-input v-model="inputNow.right"></el-input>
+            <el-input v-model="$store.state.inputNow.right"></el-input>
           </el-form-item>
 
           <el-form-item label="数据状态">
             <el-button
-              :type="inputNow.state === 1 ? 'success' : 'danger'"
-              :icon="inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
-              >{{ inputNow.state === 1 ? '正确' : '异常' }}
+              :type="$store.state.inputNow.state === 1 ? 'success' : 'danger'"
+              :icon="$store.state.inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
+              >{{ $store.state.inputNow.state === 1 ? '正确' : '异常' }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -51,7 +51,6 @@ export default {
   data() {
     return {
       input: '',
-      inputNow: '',
       timer: null,
       times: 0
     }
@@ -115,26 +114,7 @@ export default {
     })
   },
   mounted() {
-    // 设置轮询获取最新数据
-    // 页面启动*s后还是执行轮询
-    setTimeout(() => {
-      setInterval(() => {
-        Util.getCurrentOne().then(res => {
-          if (res.data !== '') {
-            this.inputNow = res.data
-            this.$forceUpdate()
-            // 添加到全局store
-            this.$store.commit('pushAllData', res.data)
-            this.$notify({
-              title: '成功',
-              message: res.data.left,
-              type: 'success',
-              position: 'bottom-right'
-            })
-          }
-        })
-      }, 500) // 轮询间隔，正成工作500以下
-    }, 1000)
+
   },
   beforeRouteLeave(to, from, next) {
     this.loading = true

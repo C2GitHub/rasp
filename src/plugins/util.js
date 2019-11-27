@@ -127,7 +127,28 @@ setDelayTime(num) {
       return false
     }
   })
-}
+},
 
+/**
+ * 清空所有数据
+ */
+emptyAllData() {
+  return axios.get('/api/emptyAllData').then(res => {
+    if (res.status === 200) {
+      return res.data
+    }
+  })
+},
+
+/**
+ * 清空异常数据
+ */
+emptyErrData() {
+  return axios.get('/api/emptyErrData').then(res => {
+    if (res.status === 200) {
+      return res.data
+    }
+  })
+}
 
 }
