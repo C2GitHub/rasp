@@ -26,9 +26,20 @@ var isAuto = true
 // isPass直通  开启 / 关闭
 var isPass = false
 
+// 延时清空扫描状态时间
+var delayDataClearTime = 4000
+
 // 当前班次所有数据
 var allData = []
-Util.getData(path.join(__dirname, './data.text'))
+Util.getData(path.join(__dirname, './data.text')).then( data => {
+  try {
+    let dataObj = JSON.parse(data)
+    allData = dataObj
+    // console.log(allData)
+  } catch (error) {
+    throw error
+  }
+})
 
 // 默认渲染首页
 // 服务器初始化，首页必须同步读取
@@ -77,16 +88,10 @@ router.post('/api/sentNewDate', (req, res) => {
       } else {
         tempData.state = 0
         // ----------保存错误数据------------//
-        Util.getData(paht.join(__dirname, './err.text')).then(data => {
+        Util.getData(path.join(__dirname, './err.text')).then(data => {
           data = data === '' ? '[]' : data
           data = JSON.parse(data)
-          Util.saveData(
-            path
-              .join(
-                __dirname,
-                './err.text',
-                JSON.stringify(data.push(tempData))
-              )
+          Util.saveData( path.join( __dirname, './err.text'), JSON.stringify(data.push(tempData))
               .then(isSucess => {
                 if (isSucess) {
                   console.log('写入异常数据成功')
@@ -115,19 +120,29 @@ router.post('/api/sentNewDate', (req, res) => {
     }
   } else {
     // --------------***-------------//
-    // 数据验证不通过，输出pin值从新扫描
+    // 数据验证不通过，输出pin值重新新扫描
     console.log(req.body.data)
   }
 
-  timer = setTimeout(() => {
-    clearTimeout(getTwoDataDuration)
-    getTwoDataDuration = null
-  }, 2000) // 2s内必须完成左右两侧数据扫描
-
+  // 请求响应
   res.json({
     err: 0,
     success: 1
   })
+
+  // 延时数据清空
+  if (!!timer) return
+  timer = setTimeout(() => {
+
+    // 清空数据
+    tempData.left = ''
+    tempData.right = ''
+    tempData.time = ''
+    tempData.state = ''
+    console.log('上一次扫描状态清空！')
+    clearTimeout(getTwoDataDuration)
+    getTwoDataDuration = null
+  }, delayDataClearTime) // 规定时间内必须完成左右两侧数据扫描
 })
 
 router.get('/api/scanAgain', (req, res) => {
@@ -197,14 +212,11 @@ router.post('/api/setPass', (req, res) => {
 
 // 获取当前班次扫描数据信息
 router.get('/api/scanData', (req, res) => {
-  var dataStr = fs.readFileSync(path.join(__dirname, './data.text'), 'utf8')
-  dataStr = dataStr.trim() === '' ? [] : dataStr
-  try {
-    let data = JSON.parse(dataStr)
-
-    res.json({ data })
-  } catch (error) {}
-})
+  res.json({
+    err: 0,
+    data: allData
+  })
+}),
 
 // 获取错误历史
 router.get('/api/getErrData', (req, res) => {
@@ -212,10 +224,38 @@ router.get('/api/getErrData', (req, res) => {
     if(err) {
       res.send(err)
     }else{
-      data = data === "" ? '[{"time":1574778850297,"left":"1003000500023L221911210043","right":"1003000500023L221911210044","state":0}]': data
+      data = data === "" ? '[]': data
       res.json({data:JSON.parse(data)})
     }
   })
 })
+
+// 设置状态延迟时间
+router.post('/api/setDelayTime', (req, res) => {
+  let time = req.body.time
+  time = Number(time)
+  if (time <= 2){
+    time =2
+  }else if(time >= 6) {
+    time = 6
+  }
+  delayDataClearTime = time*1000
+  console.log("设置延时时间成功：" + delayDataClearTime)
+
+  res.json({
+    err: 0,
+    success: 1
+  })
+})
+
+
+// 获取延迟时间
+router.get('/api/getDelayTime', ( req, res) => {
+  res.json({
+    err: 0,
+    time: parseInt(delayDataClearTime/100)/10
+  })
+})
+
 
 module.exports = router

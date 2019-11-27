@@ -15,6 +15,9 @@ export default new Vuex.Store({
   mutations: {
     pushAllData(state, data) {
       state.allData.push(data)
+    },
+    setAllData(state, dataObj) {
+      state.allData = dataObj
     }
   },
   actions: {

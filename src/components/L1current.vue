@@ -29,6 +29,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
+import Util from '../plugins/util.js'
 import moment from 'moment'
 
 export default {
@@ -39,8 +40,11 @@ export default {
       scanData: []
     }
   },
-  mounted() {},
+  mounted() {
+    
+  },
   methods: {
+    ...mapMutations(['pushAllData']),
     dateFormat: function(row, column) {
       var date = row.time
       if (date == undefined) {

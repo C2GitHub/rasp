@@ -57,7 +57,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['pushAllData']),
+    ...mapMutations(['pushAllData', 'setAllData']),
     onBlur: e => {
       e.target.focus()
     },
@@ -106,6 +106,14 @@ export default {
       }, 500)
     }
   },
+  created() {
+    // 获取所有扫描数据
+    Util.getScanData().then(res => {
+      if (res.err === 0) {
+        this.setAllData(res.data)
+      }
+    })
+  },
   mounted() {
     // 设置轮询获取最新数据
     // 页面启动*s后还是执行轮询
@@ -114,6 +122,7 @@ export default {
         Util.getCurrentOne().then(res => {
           if (res.data !== '') {
             this.inputNow = res.data
+            this.$forceUpdate()
             // 添加到全局store
             this.$store.commit('pushAllData', res.data)
             this.$notify({

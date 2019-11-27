@@ -24,10 +24,19 @@ module.exports = {
       }
     })
   },
-  getData: async (path) => {
-    var data = await new Promise((resolve, reject) => {
-      return fs.readFileSync(path, 'utf8')
+  getData: (path) => {
+    return new Promise((resolve, reject) => {
+      fs.readFile(path, 'utf8', (err, data) => {
+        if(err) {
+          reject(err)
+        }else {
+          resolve(data)
+        }
+      })
     })
+    // var data = await new Promise((resolve, reject) => {
+    //   return  fs.readFileSync(path, 'utf8')
+    // })
   },
   saveData (path, data){
    return new Promise((resolve, reject) => {

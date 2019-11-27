@@ -102,6 +102,31 @@ getErrData() {
       return res.data
     }
   })
+},
+
+/**
+ * 获取扫码状态延时时间
+ */
+getDelayTime() {
+  return axios.get('/api/getDelayTime').then(res => {
+    if (res.status === 200) {
+      return res.data
+    }
+  })
+},
+
+/**
+ *  设置延迟时间
+ *  */
+
+setDelayTime(num) {
+  return axios.post('/api/setDelayTime', {time: num}).then(res => {
+    if(res.status === 200) {
+      return true
+    } else{
+      return false
+    }
+  })
 }
 
 

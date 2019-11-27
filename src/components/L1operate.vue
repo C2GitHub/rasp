@@ -34,6 +34,15 @@
             </el-switch>
           </div>
         </div>
+
+        <div class="el-form-item">
+          <label class="el-form-item__label" style="width: 106px;"
+            >状态延时(s)</label
+          >
+          <div class="el-form-item__content" style="margin-left: 106px;">
+            <el-input-number v-model="delayDataClearTime" :precision="1" :step="0.1" :max="6" :min="2" @change="handleDelayTimeChange"></el-input-number>
+          </div>
+        </div>
       </div>
     </el-container>
 
@@ -58,7 +67,8 @@ export default {
       isAuto: true,
       isPass: false,
       isAutoTimer: null,
-      isPassTimer: null
+      isPassTimer: null,
+      delayDataClearTime: 4.0
     }
   },
   watch: {
@@ -137,7 +147,36 @@ export default {
         })
       }
       })
+    },
+
+    // 设置延时时间
+    handleDelayTimeChange(val) {
+     Util.setDelayTime(val).then(state => {
+       if (state) {
+         this.$notify({
+           title: '成功',
+           message: '服务器扫码状态延时时间(' +  this.delayDataClearTime + 's)!',
+           type: 'success',
+           position: 'bottom-right'
+         })
+       }else{
+         this.$notify({
+           title: '错误',
+           message: '设置服务器扫码状态延时时间失败！',
+           type: 'error',
+           position: 'bottom-right'
+         })
+       }
+     })
     }
+  },
+  created() {
+    // 获取延迟时间
+    Util.getDelayTime().then(res => { 
+      this.delayDataClearTime = Number(res.time)
+    })
+
+
   }
 }
 </script>
