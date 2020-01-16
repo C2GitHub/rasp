@@ -47,6 +47,7 @@ export default {
     setTimeout(() => {
       setInterval(() => {
         Util.getCurrentOne().then(res => {
+          console.log(res)
           if (res.data !== '') {
             this.$store.commit('replaceInputNow', res.data)
             console.log(

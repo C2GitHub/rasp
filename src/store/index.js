@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     allData: [],
     errData:[],
-    pollIntervalTime: 500,
+    pollIntervalTime: 1000,
     inputNow: {left: '', right: '', time: '', state: 0},
   },
   mutations: {
