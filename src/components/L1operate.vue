@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import Util from '../plugins/util.js'
+import Api from '../plugins/api.js'
 export default {
   data() {
     return {
@@ -94,7 +94,7 @@ export default {
     isAuto(val) {
       if (this.isAutoTimer) return
 
-      Util.setAuto(val ? 1 : 0).then(state => {
+      Api.setAuto(val ? 1 : 0).then(state => {
         this.isAutoTimer = setTimeout(() => {
           if (state == 1) {
           this.isAuto = true
@@ -121,7 +121,7 @@ export default {
        isPass(val) {
       if (this.isPassTimer) return
 
-      Util.setPass(val ? 1 : 0).then(state => {
+      Api.setPass(val ? 1 : 0).then(state => {
         console.log(state)
         this.isPassTimer = setTimeout(() => {
           if (state == 1) {
@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     confirm() {
-      Util.confirmPass().then(state => {
+      Api.confirmPass().then(state => {
       if (state) {
         this.$notify({
           title: '成功',
@@ -170,7 +170,7 @@ export default {
 
     // 设置延时时间
     handleDelayTimeChange(val) {
-     Util.setDelayTime(val).then(state => {
+     Api.setDelayTime(val).then(state => {
        if (state) {
          this.$notify({
            title: '成功',
@@ -195,7 +195,7 @@ export default {
 
     // 清空生产记录
     emptyAllData() {
-      Util.emptyAllData().then(res => {
+      Api.emptyAllData().then(res => {
         if (res.isSucess === 1) {
           this.$notify({
            title: '成功',
@@ -211,7 +211,7 @@ export default {
 
     // 清空异常历史
     emptyErrData() {
-      Util.emptyErrData().then(res => {
+      Api.emptyErrData().then(res => {
         if (res.isSucess === 1) {
           this.$notify({
            title: '成功',
@@ -225,7 +225,7 @@ export default {
   },
   created() {
     // 获取延迟时间
-    Util.getDelayTime().then(res => { 
+    Api.getDelayTime().then(res => { 
       this.delayDataClearTime = Number(res.time)
     })
 

@@ -4,7 +4,6 @@
       <div class="table">
         <el-table :data="$store.state.allData" border style="width: 100%">
           <el-table-column prop="date" label="时间" sortable  :formatter="dateFormat">
-            
           </el-table-column>
           <el-table-column prop="left" label="左侧条码" sortable>
           </el-table-column>
@@ -29,22 +28,26 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import Util from '../plugins/util.js'
+import Api from '../plugins/api.js'
 import moment from 'moment'
 
 export default {
-  name: 'HelloWorld',
+  name: 'L1current',
   props: {},
   data() {
     return {
       scanData: []
     }
   },
-  mounted() {
-    
+  created() {
+    Api.getScanData().then(res => {
+      if (res.data) {
+        this.$set(scanData, res.data)
+        this.scanData = res.data
+      }
+    })
   },
   methods: {
-    ...mapMutations(['pushAllData']),
     dateFormat: function(row, column) {
       var date = row.time
       if (date == undefined) {

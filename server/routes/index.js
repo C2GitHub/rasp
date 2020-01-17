@@ -12,42 +12,38 @@ var SCAN_CONFIG = {
   delayTimer: null
 }
 
-// 服务器路由，首页渲染
+// 服务器路由，渲染用户操作页面首页
 router.get('/', function (req, res) {
   var HOMEPAGE = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8')
   res.send(HOMEPAGE)
 })
 
 // 轮询最新数据
-router.get('/api/getCurrentOne', function (req, res) {
+router.get('/getCurrentOne', function (req, res) {
   res.json({
     err: 0,
-    data: scanData.newItem
+    data: scanData.SCAN_DATA.newItem
   })
 })
 
 // 获取当前班次扫描数据信息
-router.get('/api/scanData', (req, res) => {
+router.get('/scanData', (req, res) => {
   res.json({
     err: 0,
-    data: scanData.allData
+    data: scanData.SCAN_DATA.allData
   })
 })
 
 // 获取错误历史
-router.get('/api/getErrData', (req, res) => {
-  fs.readFile(path.join(__dirname, './err.text'), 'utf8', (err, data) => {
-    if (err) {
-      res.send(err)
-    } else {
-      data = data === '' ? '[]' : data
-      res.json({ data: JSON.parse(data) })
-    }
+router.get('/getErrData', (req, res) => {
+  res.json({
+    err: 0,
+    data: scanData.SCAN_DATA.errData
   })
 })
 
 // 功能启用或请用isRuning
-router.post('/api/setAuto', (req, res) => {
+router.post('/setAuto', (req, res) => {
   if (req.body.state == 1) {
     isAuto = true
     res.json({
@@ -64,7 +60,7 @@ router.post('/api/setAuto', (req, res) => {
 })
 
 // 功能启用或停用直通模式isPass
-router.post('/api/setPass', (req, res) => {
+router.post('/setPass', (req, res) => {
   if (req.body.state == 1) {
     isPass = true
     res.json({
@@ -81,7 +77,7 @@ router.post('/api/setPass', (req, res) => {
 })
 
 // 设置状态延迟时间
-router.post('/api/setDelayTime', (req, res) => {
+router.post('/setDelayTime', (req, res) => {
   let time = req.body.time
   time = Number(time)
   if (time <= 2) {
@@ -99,7 +95,7 @@ router.post('/api/setDelayTime', (req, res) => {
 })
 
 // 获取延迟时间
-router.get('/api/getDelayTime', (req, res) => {
+router.get('/getDelayTime', (req, res) => {
   res.json({
     err: 0,
     time: parseInt(delayDataClearTime / 100) / 10
@@ -107,7 +103,7 @@ router.get('/api/getDelayTime', (req, res) => {
 })
 
 // 清空所有生产数据
-router.get('/api/emptyAllData', (req, res) => {
+router.get('/emptyAllData', (req, res) => {
   allData = []
   Util.saveData('./route/data.text', JSON.stringify(allData)).then(isSucess => {
     if (isSucess) {
@@ -122,7 +118,7 @@ router.get('/api/emptyAllData', (req, res) => {
 })
 
 // 清空异常数据
-router.get('/api/emptyErrData', (req, res) => {
+router.get('/emptyErrData', (req, res) => {
   errData = []
   Util.saveData('./route/err.text', JSON.stringify(errData)).then(isSucess => {
     if (isSucess) {

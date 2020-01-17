@@ -30,7 +30,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import moment from 'moment'
-import Util from '../plugins/util.js'
+import Api from '../plugins/api.js'
 
 export default {
   name: 'hitory',
@@ -41,7 +41,7 @@ export default {
     }
   },
   created() {
-    Util.getErrData().then(res => {
+    Api.getErrData().then(res => {
       this.errData = res.data
     })
   },

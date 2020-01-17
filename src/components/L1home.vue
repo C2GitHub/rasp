@@ -1,39 +1,26 @@
 <template>
   <div id="home">
-    <!-- 条码扫描入口 -->
-    <el-container>
-      <div class="input-wraper">
-        <div class="input">
-          <el-input
-            v-model="input"
-            placeholder="条码扫描"
-            autofocus="true"
-            ref="input"
-            @blur="onBlur"
-            @focus="onFocus"
-          ></el-input>
-        </div>
-      </div>
-    </el-container>
-
     <!-- 当前条码显示 -->
-    <div class="title"><p>当前扫描条码 :</p></div>
+    <div class="title">
+      <p>当前扫描条码 :</p>
+    </div>
     <el-container class="dataArea">
       <div class="showData">
         <el-form ref="form" label-width="80px">
           <el-form-item label="左侧条码">
-            <el-input v-model="$store.state.inputNow.left"></el-input>
+            <el-input v-model="newItem.left" :readonly="true"></el-input>
           </el-form-item>
           <el-form-item label="右侧条码">
-            <el-input v-model="$store.state.inputNow.right"></el-input>
+            <el-input v-model="newItem.right" :readonly="true"></el-input>
           </el-form-item>
-
+          <el-form-item label="扫描时间">
+            <el-input v-model="newItem.time" :readonly="true"></el-input>
+          </el-form-item>
           <el-form-item label="数据状态">
             <el-button
-              :type="$store.state.inputNow.state === 1 ? 'success' : 'danger'"
-              :icon="$store.state.inputNow.state === 1 ? 'el-icon-check' : 'el-icon-close'"
-              >{{ $store.state.inputNow.state === 1 ? '正确' : '异常' }}
-            </el-button>
+              :type="newItem.state === 1 ? 'success' : 'danger'"
+              :icon="newItem.state === 1 ? 'el-icon-check' : 'el-icon-close'"
+            >{{ newItem.state === 1 ? '正确' : '异常' }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -42,92 +29,58 @@
 </template>
 
 <script>
-import Util from '../plugins/util.js'
-import BScroll from 'better-scroll'
-import { mapMutations } from 'vuex'
+import Api from "../plugins/api.js";
+import BScroll from "better-scroll";
+import { mapMutations } from "vuex";
+import moment from "moment";
 
 export default {
-  name: 'L1home',
+  name: "L1home",
   data() {
     return {
-      input: '',
-      timer: null,
-      times: 0
-    }
+      newItem: {
+        left: "",
+        right: "",
+        state: "",
+        time: ""
+      }
+    };
   },
   methods: {
-    ...mapMutations(['pushAllData', 'setAllData']),
-    onBlur: e => {
-      e.target.focus()
-    },
-    onFocus: e => {}
-  },
-  watch: {
-    input(val, oldVal) {
-      if (this.timer) {
-        return
+    dateFormat: function(row, column) {
+      var date = row.time;
+      if (date == undefined) {
+        return "";
       }
-      this.timer = setTimeout(() => {
-        // 判断数据是否正确输入
-        if (this.input.length === 26) {
-          console.log('扫码正常:' + this.input)
-          // 数据正确输入，发送给服务器
-          Util.sentNewDate(this.input).then(flag => {
-            if (!flag) {
-              // 数据传输失败
-              this.$notify.error({
-                title: '错误',
-                message: '上传数据失败！',
-                position: 'bottom-right'
-              })
-            }
-          })
-        } else if (this.input.length > 0) {
-          //清空时误触发
-          // 数据长度不符合要求
-          console.log('扫码异常:' + this.input)
-          if (this.times < 3) {
-            this.input = ''
-            Util.scanAgain()
-            this.times++
-          } else {
-            // 发送位置错误信息
-            Util.sentPosErr()
-            this.times = 0
-            this.input = ''
-          }
-        }
-        // 清除定时器
-        clearTimeout(this.timer)
-        this.timer = null
-        // 数据清零
-        this.input = ''
-      }, 500)
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
   },
   created() {
-    // 获取所有扫描数据
-    Util.getScanData().then(res => {
-      if (res.err === 0) {
-        this.setAllData(res.data)
-      }
-    })
+    // 页面数据初始化完成、设置轮询获取最新数据
+    setInterval(() => {
+      Api.getCurrentOne().then(res => {
+        if (!res.data) return;
+        if (
+          res.data.left !== this.newItem.left ||
+          res.data.right !== this.newItem.right
+        ) {
+          Object.assign(this.newItem, res.data)
+          this.newItem.time = moment(res.data.time).format(
+            "YYYY-MM-DD  HH:mm:ss"
+          )
+          this.$notify({
+            title: res.data.state === 1 ? "成功" : "异常",
+            message: res.data.left,
+            type: res.data.state === 1 ? "success" : "error",
+            position: "bottom-right"
+          });
+        }
+      });
+    }, 3000); // 轮询间隔，正常工作500ms以下
   },
   mounted() {
-
-  },
-  beforeRouteLeave(to, from, next) {
-    this.loading = true
-    if (to.path.startsWith('/pline1')) {
-      from.meta.keepAlive = true
-      to.meta.keepAlive = true
-    } else {
-      from.meta.keepAlive = false
-      // this.$destroy()
-    }
-    next()
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

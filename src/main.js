@@ -15,9 +15,8 @@ import moment from 'moment'
 Vue.use(moment)
 
 // 添加全局过滤器
-Vue.filter('dateFormat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
-  return moment(dataStr).format(pattern)
-
+Vue.filter('dateFormat', function(dataStr) {
+  return moment(new Date(dataStr)).format('YYYY-MM-DDTHH:mm:ss')
 })
 Vue.config.productionTip = false
 import {
