@@ -2,15 +2,14 @@
   <div id="history">
     <el-container>
       <div class="table">
-        <el-table :data="errData" border style="width: 100%">
+        <el-table :data="errData" border style="width: 100%" height="100%">
           <el-table-column prop="date" label="时间" sortable  :formatter="dateFormat">
-            
           </el-table-column>
           <el-table-column prop="left" label="左侧条码" sortable>
           </el-table-column>
           <el-table-column prop="right" label="右侧条码" sortable>
           </el-table-column>
-          <el-table-column prop="state" label="状态">
+          <el-table-column prop="state" label="状态" width="70">
             <template slot-scope="scope">
               <el-button
                 :type="scope.row.state === 1 ? 'success' : 'danger'"
@@ -63,6 +62,10 @@ export default {
 <style scoped lang="less" scoped>
 #history {
   width: 100%;
+  height: 100%;
+  .el-container{
+    height: 100%;
+  }
 }
 .table {
   width: 100%;

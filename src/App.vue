@@ -160,6 +160,12 @@ body {
     bottom: 50px;
     padding-bottom: 0 !important;
   }
+  .el-main{
+    padding: 0;
+    .el-wrapper{
+      padding: 0
+    }
+  }
 }
 // 适配pc端
 @media screen and (min-width: 768px) {
