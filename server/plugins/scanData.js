@@ -38,7 +38,7 @@ var SCAN_DATA = {
 
 /**
  * @description 设置新数据
- * @param object
+ * @param object ：left right 
  * @returns boolean
  */
 const setNewScanItem = dataObj => {
@@ -47,6 +47,7 @@ const setNewScanItem = dataObj => {
     SCAN_DATA.newItem.right = dataObj.right
     SCAN_DATA.newItem.state = dataObj.left === dataObj ? 1 : 0,
     SCAN_DATA.newItem.time = Date.now()
+    // 数据持久化
     if (!SCAN_DATA.newItem.state) {
       SCAN_DATA.allData.push(SCAN_DATA.newItem)
       SCAN_DATA.errData.push(SCAN_DATA.newItem)

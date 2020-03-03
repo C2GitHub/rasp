@@ -5,40 +5,39 @@
         <template slot="title"><i class="el-icon-menu"></i>消毒柜1线</template>
         <el-menu-item-group>
           <template slot="title">运行状态</template>
-          <el-menu-item index="/pline1/home">
+          <el-menu-item index="/pline1/page1">
           当前状态
             </el-menu-item>
-          <el-menu-item index="/pline1/operate">
+          <el-menu-item index="/pline1/page2">
                           远程操作
           </el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group title="数据记录">
-          <el-menu-item index="/pline1/current">
+          <el-menu-item index="/pline1/page3">
               实时数据
           </el-menu-item>
-          <el-menu-item index="/pline1/history">
+          <el-menu-item index="/pline1/page4">
             异常历史
           </el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       
-
             <el-submenu index="2">
         <template slot="title"><i class="el-icon-menu"></i>消毒柜2线</template>
         <el-menu-item-group>
           <template slot="title">运行状态</template>
-          <el-menu-item index="/pline1/home">
+          <el-menu-item index="/pline1/page1">
               当前状态
             </el-menu-item>
-          <el-menu-item index="/pline1/operate">
+          <el-menu-item index="/pline1/page2">
               远程操作
           </el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group title="数据记录">
-          <el-menu-item index="/pline1/current">
+          <el-menu-item index="/pline1/page3">
               实时数据
           </el-menu-item>
-          <el-menu-item index="/pline1/history">
+          <el-menu-item index="/pline1/page4">
             异常历史
           </el-menu-item>
         </el-menu-item-group>

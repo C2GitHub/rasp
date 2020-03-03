@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import PLine1 from '../views/PLine1.vue'
-import L1home from '../components/L1home.vue'
+import L1home from '../components/L1page1.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push;
@@ -12,17 +12,17 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
   {
     path: '/',
-    redirect: '/pline1/home'
+    redirect: '/pline1/page1'
   },
   {
     path: '/pline1',
     name: 'pline1',
     component: PLine1,
     children: [
-      {path: 'home', component: L1home, meta: {keepAlive: true}},
-      {path: 'operate', component: () => import('../components/L1operate.vue'), meta: {keepAlive: true}},
-      {path: 'current', component: () => import('../components/L1current.vue'), meta: {keepAlive: true}},
-      {path: 'history', component: () => import('../components/L1history.vue'), meta: {keepAlive: true}},
+      {path: 'page1', component: L1home, meta: {keepAlive: true}},
+      {path: 'page2', component: () => import('../components/L1page2.vue'), meta: {keepAlive: true}},
+      {path: 'page3', component: () => import('../components/L1page3.vue'), meta: {keepAlive: true}},
+      {path: 'page4', component: () => import('../components/L1page4.vue'), meta: {keepAlive: true}},
     ],
     meta: {
       keepAlive: true

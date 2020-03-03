@@ -13,6 +13,7 @@ const getScanSerialport = async () => {
 	const scanPort = scanGuns.map(item => {
 		return item.path // 扫描枪串口号
 	})
+	console.log('scanPort list: ' + scanPort)
 	return scanPort
 }
 
@@ -44,12 +45,29 @@ const initScanPorts = async () => {
  */
 const getPortScanData = port => {
 	if (!port) { return }
+	let portData = {
+		success: false,
+		data: ''
+	}
+	let timer = null
 	return new Promise((resolve, reject) => {
 		port.write([0x16, 0x54, 0x0d]) // 开始扫描
-		// port.write([0x16, 0x55, 0x0d]) //停止扫描
 		port.on('data', data => {
-			resolve(data.toString())
+			portData.success = true
+			portData.data = data.toString()
+			if (timer) {
+				clearTimeout(timer)
+				timer = null
+			}
+			resolve(portData)
 		})
+		timer = setTimeout(() => {
+			if (portData.success) return
+			port.write([0x16, 0x55, 0x0d]) //停止扫描
+			clearTimeout(timer)
+			timer = null
+			resolve(portData)
+		}, 4000) // 扫码等待时间
 	})
 }
 
@@ -65,18 +83,14 @@ initScanPorts().then(data => { // get serialport with async
  * @description *** 发送串口指令 & 读取串口数据 ***
  * @param Array | Object
  */
-const getPortData = (param) => {
-	let scanPorts = ports
-	if (param && param instanceof Object) { scanPorts = [param] }
+const getPortData = () => {
 	return new Promise((resolve, reject) => {
-		if (scanPorts instanceof Array) {
-			const ps = scanPorts.map(item => {
-				return getPortScanData(item)
-			})
-			Promise.all(ps).then(data => {
-				resolve(data)
-			})
-		}
+		const ps = ports.map(item => {
+			return getPortScanData(item)
+		})
+		Promise.all(ps).then(data => {
+			resolve(data)
+		})
 	})
 }
 

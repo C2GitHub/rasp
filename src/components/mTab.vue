@@ -2,25 +2,25 @@
   <div id="mTab">
     <el-menu :default-active="defaultActive" class="el-menu" mode="horizontal" active-text-color="#409EFF" @select="handleSelect">
         <el-menu-item index="1">
-          <router-link to="/pline1/home">
+          <router-link to="/pline1/page1">
           <div class="icon"><i class="el-icon-s-home"></i></div>
             <div class="text">首页</div>
           </router-link>
         </el-menu-item>
         <el-menu-item index="2">
-          <router-link to="/pline1/operate">
+          <router-link to="/pline1/page2">
           <div class="icon"><i class="el-icon-setting"></i></div>
             <div class="text">操作</div>
           </router-link>
         </el-menu-item>
         <el-menu-item index="3">
-          <router-link to="/pline1/current">
+          <router-link to="/pline1/page3">
           <div class="icon"><i class="el-icon-s-order"></i></div>
             <div class="text">记录</div>
           </router-link>
         </el-menu-item>
         <el-menu-item index="4">
-          <router-link to="/pline1/history">
+          <router-link to="/pline1/page4">
            <div class="icon"><i class="el-icon-s-release"></i></div>
             <div class="text">异常</div>
           </router-link>

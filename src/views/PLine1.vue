@@ -40,10 +40,10 @@ export default {
     return {
       defaultActive: '1',
       routes: [
-        { path: '/pline1/home', title: '当前状态' },
-        { path: '/pline1/operate', title: '远程操作' },
-        { path: '/pline1/current', title: '实时数据' },
-        { path: '/pline1/history', title: '异常记录' }
+        { path: '/pline1/page1', title: '当前状态' },
+        { path: '/pline1/page2', title: '远程操作' },
+        { path: '/pline1/page3', title: '实时数据' },
+        { path: '/pline1/page4', title: '异常记录' }
       ]
     }
   },
